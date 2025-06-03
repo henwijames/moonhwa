@@ -86,47 +86,94 @@ export default function ManhwaChapter() {
     <div className="w-full min-h-screen bg-background">
       {/* Navigation Bar */}
       <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(`/manhwa/${id}`)}
-            className="flex items-center"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Details
-          </Button>
-
-          <div className="flex items-center gap-4">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          {/* Back Button - Full Width on Mobile */}
+          <div className="mb-4 md:mb-0 md:hidden">
             <Button
-              variant="outline"
-              onClick={handlePreviousChapter}
-              disabled={parseInt(chapter) <= 1}
+              variant="ghost"
+              onClick={() => navigate(`/manhwa/${id}`)}
+              className="w-full flex items-center justify-center"
             >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Details
             </Button>
-            <span className="font-medium">Chapter {chapter}</span>
-            <Button variant="outline" onClick={handleNextChapter}>
-              Next
-              <ChevronRight className="h-4 w-4" />
+          </div>
+
+          {/* Navigation Controls */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            {/* Back Button - Hidden on Mobile */}
+            <Button
+              variant="ghost"
+              onClick={() => navigate(`/manhwa/${id}`)}
+              className="hidden md:flex items-center"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Details
             </Button>
+
+            {/* Chapter Navigation */}
+            <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-center">
+              <Button
+                variant="outline"
+                onClick={handlePreviousChapter}
+                disabled={parseInt(chapter) <= 1}
+                className="flex-1 md:flex-none min-w-[100px]"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1">Previous</span>
+              </Button>
+              <span className="font-medium px-2">Chapter {chapter}</span>
+              <Button
+                variant="outline"
+                onClick={handleNextChapter}
+                className="flex-1 md:flex-none min-w-[100px]"
+              >
+                <span className="hidden sm:inline mr-1">Next</span>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Chapter Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div>
+      <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <div className="space-y-2 sm:space-y-4">
           {chapterData.images?.map((image, index) => (
-            <div key={index} className="relative  w-full overflow-hidden">
+            <div
+              key={index}
+              className="relative w-full overflow-hidden rounded-lg"
+            >
               <img
                 src={image}
                 alt={`Page ${index + 1}`}
-                className="w-full h-full object-contain"
+                className="w-full h-auto object-contain"
                 loading="lazy"
               />
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Mobile Navigation Overlay */}
+      <div className="fixed bottom-0 left-0 right-0 md:hidden bg-background/80 backdrop-blur-sm border-t p-2">
+        <div className="flex items-center justify-between gap-2">
+          <Button
+            variant="outline"
+            onClick={handlePreviousChapter}
+            disabled={parseInt(chapter) <= 1}
+            className="flex-1"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="font-medium">Chapter {chapter}</span>
+          <Button
+            variant="outline"
+            onClick={handleNextChapter}
+            className="flex-1"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>
