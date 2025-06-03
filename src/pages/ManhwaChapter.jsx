@@ -166,12 +166,9 @@ export default function ManhwaChapter() {
       <div className="pt-[120px] md:pt-[80px]">
         {/* Chapter Content */}
         <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
-          <div className="space-y-2 sm:space-y-4">
+          <div>
             {chapterData.images?.map((image, index) => (
-              <div
-                key={index}
-                className="relative w-full overflow-hidden rounded-lg"
-              >
+              <div key={index} className="relative w-full overflow-hidden">
                 <img
                   src={image}
                   alt={`Page ${index + 1}`}
