@@ -10,6 +10,8 @@ export default function ManhwaChapter() {
   const [chapterData, setChapterData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const fetchChapterData = async () => {
@@ -30,6 +32,26 @@ export default function ManhwaChapter() {
       fetchChapterData();
     }
   }, [id, chapter]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Show nav when scrolling up or at the top
+      if (currentScrollY < lastScrollY || currentScrollY < 10) {
+        setIsNavVisible(true);
+      }
+      // Hide nav when scrolling down and not at the top
+      else if (currentScrollY > lastScrollY && currentScrollY > 10) {
+        setIsNavVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   const handlePreviousChapter = () => {
     const prevChapter = parseInt(chapter) - 1;
@@ -85,7 +107,11 @@ export default function ManhwaChapter() {
   return (
     <div className="w-full min-h-screen bg-background">
       {/* Navigation Bar */}
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
+      <div
+        className={`fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b transition-transform duration-300 ${
+          isNavVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <div className="max-w-6xl mx-auto px-4 py-4">
           {/* Back Button - Full Width on Mobile */}
           <div className="mb-4 md:mb-0 md:hidden">
@@ -136,22 +162,25 @@ export default function ManhwaChapter() {
         </div>
       </div>
 
-      {/* Chapter Content */}
-      <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
-        <div className="space-y-2 sm:space-y-4">
-          {chapterData.images?.map((image, index) => (
-            <div
-              key={index}
-              className="relative w-full overflow-hidden rounded-lg"
-            >
-              <img
-                src={image}
-                alt={`Page ${index + 1}`}
-                className="w-full h-auto object-contain"
-                loading="lazy"
-              />
-            </div>
-          ))}
+      {/* Content with top padding to account for fixed nav */}
+      <div className="pt-[120px] md:pt-[80px]">
+        {/* Chapter Content */}
+        <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
+          <div className="space-y-2 sm:space-y-4">
+            {chapterData.images?.map((image, index) => (
+              <div
+                key={index}
+                className="relative w-full overflow-hidden rounded-lg"
+              >
+                <img
+                  src={image}
+                  alt={`Page ${index + 1}`}
+                  className="w-full h-auto object-contain"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
