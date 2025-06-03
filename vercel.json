@@ -27,5 +27,19 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/api/:path*",
+      "has": [
+        {
+          "type": "header",
+          "key": "location",
+          "value": "https://perfectdomain.com/domain/moonhwa.com(.*)"
+        }
+      ],
+      "destination": "https://moonhwa.com$1",
+      "permanent": false
+    }
   ]
 }

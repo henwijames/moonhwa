@@ -10,6 +10,7 @@ const apiService = axios.create({
     Accept: "application/json",
     "Accept-Language": "en-US,en;q=0.9",
   },
+  withCredentials: true,
 });
 
 // Add response interceptor to handle redirects and errors
@@ -20,18 +21,37 @@ apiService.interceptors.response.use(
       console.error("Received HTML response instead of JSON");
       throw new Error("Cloudflare challenge detected");
     }
+
+    // Check for redirects in the response
+    if (response.headers.location) {
+      const redirectUrl = response.headers.location;
+      console.log("Redirecting to:", redirectUrl);
+      return apiService.get(redirectUrl);
+    }
+
     return response;
   },
   (error) => {
     console.error("API Error:", error.message);
+
+    // Handle redirect errors
     if (error.response?.status === 301 || error.response?.status === 302) {
       const redirectUrl = error.response.headers.location;
-      return axios.get(redirectUrl);
+      console.log("Redirecting to:", redirectUrl);
+      return apiService.get(redirectUrl);
     }
+
+    // Handle CORS errors
+    if (error.message === "Network Error") {
+      console.error("CORS error detected");
+      throw new Error("Unable to access the API. Please try again later.");
+    }
+
     if (error.response?.status === 403) {
       console.error("Access forbidden. Please check your API access.");
       throw new Error("Access forbidden. Please try again later.");
     }
+
     return Promise.reject(error);
   }
 );
