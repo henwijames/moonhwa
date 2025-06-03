@@ -23,11 +23,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ModeToggle } from "./ModeToggle";
 
 const Navbar1 = ({
   logo = {
     url: "/",
-    src: "https://shadcnblocks.com/images/block/logos/shadcnblockscom-icon.svg",
+    src: "/moonhwa.png",
     alt: "logo",
     title: "Moonhwa",
   },
@@ -129,10 +130,12 @@ const Navbar1 = ({
                 {logo.title}
               </span>
             </NavLink>
+
             <div className="flex items-center ">
               <NavigationMenu>
                 <NavigationMenuList>
                   {menu.map((item) => renderMenuItem(item))}
+                  <ModeToggle />
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
@@ -146,31 +149,41 @@ const Navbar1 = ({
             <NavLink to={logo.url} className="flex items-center gap-2">
               <img src={logo.src} className="max-h-8" alt={logo.alt} />
             </NavLink>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="size-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>
-                    <NavLink to={logo.url} className="flex items-center gap-2">
-                      <img src={logo.src} className="max-h-8" alt={logo.alt} />
-                    </NavLink>
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col gap-6 p-4">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="flex w-full flex-col gap-4"
-                  >
-                    {menu.map((item) => renderMobileMenuItem(item))}
-                  </Accordion>
-                </div>
-              </SheetContent>
-            </Sheet>
+            <div className="flex items-center gap-2">
+              <ModeToggle />
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <Menu className="size-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="overflow-y-auto">
+                  <SheetHeader>
+                    <SheetTitle>
+                      <NavLink
+                        to={logo.url}
+                        className="flex items-center gap-2"
+                      >
+                        <img
+                          src={logo.src}
+                          className="max-h-8"
+                          alt={logo.alt}
+                        />
+                      </NavLink>
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col gap-6 p-4">
+                    <Accordion
+                      type="single"
+                      collapsible
+                      className="flex w-full flex-col gap-4"
+                    >
+                      {menu.map((item) => renderMobileMenuItem(item))}
+                    </Accordion>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </div>
