@@ -62,15 +62,16 @@ export default function ManhwaDetail() {
   return (
     <div className="w-full px-4 py-8">
       <div className="max-w-6xl mx-auto">
-        <Button variant="ghost" className="mb-6" onClick={() => navigate("/")}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
-        </Button>
+        
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Cover Image - Sticky Container */}
           <div className="md:col-span-1">
             <div className="md:sticky md:top-8">
+              <Button variant="ghost" className="mb-6" onClick={() => navigate("/")}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back
+              </Button>
               <div className="aspect-[3/4] relative overflow-hidden rounded-lg border shadow-lg">
                 <img
                   src={manhwa.image}
