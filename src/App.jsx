@@ -14,8 +14,8 @@ function App() {
           <AppLayout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/categories" element={<Categories />} />
-              <Route path="/trending" element={<Trending />} />
+              {/* <Route path="/categories" element={<Categories />} />
+              <Route path="/trending" element={<Trending />} /> */}
               <Route path="/manhwa/:id" element={<ManhwaDetail />} />
               <Route
                 path="/manhwa/:id/chapter/:chapter"

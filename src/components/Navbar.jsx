@@ -32,17 +32,7 @@ const Navbar1 = ({
     alt: "logo",
     title: "Moonhwa",
   },
-  menu = [
-    { title: "Home", url: "/" },
-    {
-      title: "Categories",
-      url: "/categories",
-    },
-    {
-      title: "Trending",
-      url: "/trending",
-    },
-  ],
+  menu = [{ title: "Home", url: "/" }],
 }) => {
   const renderMenuItem = (item) => {
     if (item.items) {

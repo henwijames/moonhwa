@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { manwhaService } from "@/services/apiService";
 import { Pagination } from "@/components/ui/pagination";
 import { SearchInput } from "@/components/ui/search-input";
@@ -31,18 +30,22 @@ export default function Home() {
 
       if (search) {
         response = await manwhaService.searchManhwa(search);
+        console.log("Search response:", response);
         setManwhaList(response.data || []);
-        setTotalPages(1); // Search results are not paginated
+        setTotalPages(response.pagination?.totalPages || 1);
       } else {
         response = await manwhaService.getHomePage(page);
-        setManwhaList(response.data);
-        setTotalPages(Math.max(...response.pagination));
+        console.log("Home page response:", response);
+        setManwhaList(response.data || []);
+        setTotalPages(response.pagination?.totalPages || 1);
       }
 
       setError(null);
     } catch (err) {
-      setError("Failed to fetch manhwa data");
-      console.error(err);
+      console.error("Error details:", err);
+      setError("Failed to fetch manwha data");
+      setManwhaList([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
