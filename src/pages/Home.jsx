@@ -30,12 +30,10 @@ export default function Home() {
 
       if (search) {
         response = await manwhaService.searchManhwa(search);
-        console.log("Search response:", response);
         setManwhaList(response.data || []);
         setTotalPages(response.pagination?.totalPages || 1);
       } else {
         response = await manwhaService.getHomePage(page);
-        console.log("Home page response:", response);
         setManwhaList(response.data || []);
         setTotalPages(response.pagination?.totalPages || 1);
       }
