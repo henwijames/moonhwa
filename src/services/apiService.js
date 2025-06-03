@@ -2,7 +2,6 @@ import axios from "axios";
 
 const apiService = axios.create({
   baseURL: "/api",
-  maxRedirects: 0, // Disable automatic redirects
   validateStatus: function (status) {
     return status >= 200 && status < 500;
   },
@@ -12,47 +11,22 @@ const apiService = axios.create({
   },
 });
 
-// Add response interceptor to handle redirects and errors
+// Add response interceptor to handle errors
 apiService.interceptors.response.use(
   (response) => {
-    // Check if the response is HTML (Cloudflare challenge)
-    if (response.headers["content-type"]?.includes("text/html")) {
-      console.error("Received HTML response instead of JSON");
-      throw new Error("Cloudflare challenge detected");
-    }
-
     return response;
   },
-  async (error) => {
+  (error) => {
     console.error("API Error:", error.message);
-
-    // Handle redirects manually
-    if (error.response?.status === 301 || error.response?.status === 302) {
-      const redirectUrl = error.response.headers.location;
-      console.log("Redirecting to:", redirectUrl);
-
-      // If the redirect URL contains perfectdomain.com, modify it
-      if (redirectUrl.includes("perfectdomain.com")) {
-        const newUrl = redirectUrl.replace(
-          "https://perfectdomain.com/domain/moonhwa.com",
-          "https://moonhwa.com"
-        );
-        console.log("Modified redirect URL:", newUrl);
-        return apiService.get(newUrl);
-      }
-
-      return apiService.get(redirectUrl);
-    }
-
-    // Handle CORS errors
-    if (error.message === "Network Error") {
-      console.error("CORS error detected");
-      throw new Error("Unable to access the API. Please try again later.");
-    }
 
     if (error.response?.status === 403) {
       console.error("Access forbidden. Please check your API access.");
       throw new Error("Access forbidden. Please try again later.");
+    }
+
+    if (error.code === "ERR_NETWORK") {
+      console.error("Network error. Please check your connection.");
+      throw new Error("Network error. Please check your connection.");
     }
 
     return Promise.reject(error);
