@@ -9,13 +9,25 @@ const apiService = axios.create({
   headers: {
     Accept: "application/json",
     "Accept-Language": "en-US,en;q=0.9",
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    Origin: "https://moonhwa.vercel.app",
+    Referer: "https://moonhwa.vercel.app/",
   },
 });
 
 // Add response interceptor to handle redirects and errors
 apiService.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Check if the response is HTML (Cloudflare challenge)
+    if (response.headers["content-type"]?.includes("text/html")) {
+      console.error("Received HTML response instead of JSON");
+      throw new Error("Cloudflare challenge detected");
+    }
+    return response;
+  },
   (error) => {
+    console.error("API Error:", error.message);
     if (error.response?.status === 301 || error.response?.status === 302) {
       const redirectUrl = error.response.headers.location;
       return axios.get(redirectUrl);
